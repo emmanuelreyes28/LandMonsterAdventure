@@ -5,6 +5,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.animate = False
+        self.jumping = False
+        self.velocity = 10
         self.sprites = []  # array of sprite images
         # append 8 sprite images into array of sprites
         for i in range(1, 9):
@@ -20,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.animate = True
 
     def update(self, anim_speed):
-        if self.animate == True:
+        if self.animate:
             # set sprite image for desired amount of frames
             self.current_sprite += anim_speed
             # if reach end of the array start from first sprite
@@ -30,3 +32,17 @@ class Player(pygame.sprite.Sprite):
 
         # set sprite image
         self.image = self.sprites[int(self.current_sprite)]
+        self.jump()
+
+    def jump(self):
+        keystate = pygame.key.get_pressed()
+
+        if not self.jumping and keystate[pygame.K_SPACE]:
+            self.jumping = True
+
+        if self.jumping:
+            self.rect.y -= self.velocity
+            self.velocity -= 1
+            if self.velocity < -10:
+                self.jumping = False
+                self.velocity = 10
