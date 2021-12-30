@@ -1,4 +1,5 @@
 import pygame
+from obstacle import Obstacle
 from player import Player
 
 pygame.init()
@@ -15,9 +16,12 @@ bg = pygame.transform.scale(pygame.image.load(
 bg_x = 0
 
 player = Player(50, 195)
-player_group = pygame.sprite.Group()
+player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
+# obstacle = Obstacle(SCREEN_WIDTH, 195)
+obstacle_group = pygame.sprite.Group()
+# obstacle_group.add(obstacle)
 
 while True:
     for event in pygame.event.get():
@@ -37,6 +41,12 @@ while True:
     player_group.draw(SCREEN)
     player.animated()
     player_group.update(0.20)
-    pygame.display.update()
 
+    # spawn obstacles
+    obstacle = Obstacle(SCREEN_WIDTH, 195)
+    obstacle_group.add(obstacle)
+    obstacle_group.draw(SCREEN)
+    obstacle_group.update()
+
+    pygame.display.update()
     clock.tick(60)
