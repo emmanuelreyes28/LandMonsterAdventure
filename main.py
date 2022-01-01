@@ -19,9 +19,18 @@ player = Player(50, 195)
 player_group = pygame.sprite.GroupSingle()
 player_group.add(player)
 
-# obstacle = Obstacle(SCREEN_WIDTH, 195)
 obstacle_group = pygame.sprite.Group()
-# obstacle_group.add(obstacle)
+
+timer = 0
+spawn = False
+instantiate_time = 1000
+
+# callback function for collision detection
+
+
+def collided(sprite, other):
+    return sprite.hitbox.colliderect(other.hitbox)
+
 
 while True:
     for event in pygame.event.get():
@@ -37,16 +46,28 @@ while True:
         SCREEN.blit(bg, (rel_x, 0))
     bg_x -= 1
 
+    # check for collisions
+    if pygame.sprite.spritecollide(player_group.sprite, obstacle_group, False, collided):
+        print("Colllided")
+
+    # spawn obstacles every 1 second
+    if pygame.time.get_ticks() - timer >= instantiate_time:
+        spawn = True
+
+    if spawn:
+        obstacle = Obstacle(SCREEN_WIDTH, 195)
+        obstacle_group.add(obstacle)
+        timer = pygame.time.get_ticks()
+        spawn = False
+
     # draw player
     player_group.draw(SCREEN)
     player.animated()
-    player_group.update(0.20)
+    player_group.update(0.20, SCREEN)  # get rid of screen arg
 
-    # spawn obstacles
-    obstacle = Obstacle(SCREEN_WIDTH, 195)
-    obstacle_group.add(obstacle)
+    # draw obstacles
     obstacle_group.draw(SCREEN)
-    obstacle_group.update()
+    obstacle_group.update(SCREEN)  # get rid of screen arg
 
-    pygame.display.update()
     clock.tick(60)
+    pygame.display.update()

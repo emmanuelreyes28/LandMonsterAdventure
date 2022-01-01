@@ -17,11 +17,15 @@ class Player(pygame.sprite.Sprite):
         self.image = self.sprites[self.current_sprite]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        # create hitbox for collision detection
+        self.hitbox = pygame.rect.Rect((0, 0), (35, 35))
+        self.hitbox.midbottom = self.rect.midbottom
 
     def animated(self):
         self.animate = True
 
-    def update(self, anim_speed):
+    def update(self, anim_speed, screen):
+        pygame.draw.rect(screen, (0, 0, 0), self.hitbox, 1)
         if self.animate:
             # set sprite image for desired amount of frames
             self.current_sprite += anim_speed
@@ -43,7 +47,12 @@ class Player(pygame.sprite.Sprite):
         # avoid player from double jumping, must be touching ground to jump again
         if self.jumping:
             self.rect.y -= self.jump_power
+            # update hitbox to move with player
+            self.hitbox.midbottom = self.rect.midbottom
             self.jump_power -= 1
             if self.jump_power < -12:
                 self.jumping = False
                 self.jump_power = 12
+
+    def collided(self, obstacle):
+        return self.hitbox.colliderect(obstacle.rect)

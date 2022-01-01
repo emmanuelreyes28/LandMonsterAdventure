@@ -14,16 +14,19 @@ class Obstacle(pygame.sprite.Sprite):
                 pygame.image.load("spike-%s.png" % i), (25, 50)))
         self.image = random.choice(self.sprites)
         self.rect = self.image.get_rect()
+        self.rect = self.rect.inflate(-10, -10)
         self.rect.center = (x, y)
+        # create hitbox for collision detection
+        self.hitbox = pygame.rect.Rect((0, 0), (25, 40))
+        self.hitbox.midbottom = self.rect.midbottom
 
-    def update(self):
+    def update(self, screen):
+        pygame.draw.rect(screen, (0, 0, 0), self.hitbox, 1)
+        # obstacle moves to the left and off the screen
         self.x -= self.speed
+        # update hitbox position to move with obstacle
+        self.hitbox.midbottom = self.rect.midbottom
         self.rect = self.image.get_rect()
         self.rect.center = (self.x,  self.y)
-        # if self.rect.x <= -10:
-        #     self.kill()
-        # self.current_sprite += 1
-        # if self.current_sprite >= len(self.sprites):
-        #     self.current_sprite = 0
-
-        # self.image = self.sprites[self.current_sprite]
+        if self.rect.x <= -10:
+            self.kill()
