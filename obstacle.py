@@ -21,8 +21,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.hitbox = pygame.rect.Rect((0, 0), (25, 40))
         self.hitbox.midbottom = self.rect.midbottom
 
-    def update(self, screen):
-        pygame.draw.rect(screen, (0, 0, 0), self.hitbox, 1)
+    def update(self):
+        #pygame.draw.rect(screen, (0, 0, 0), self.hitbox, 1)
         # obstacle moves to the left and off the screen
         self.x -= self.speed
         # update hitbox position to move with obstacle

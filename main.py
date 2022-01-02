@@ -90,11 +90,11 @@ while True:
     # draw player
     player_group.draw(SCREEN)
     player.animated()
-    player_group.update(0.20, SCREEN)  # get rid of screen arg
+    player_group.update(0.20)
 
     # draw obstacles
     obstacle_group.draw(SCREEN)
-    obstacle_group.update(SCREEN)  # get rid of screen arg
+    obstacle_group.update()
 
     clock.tick(60)
     pygame.display.update()

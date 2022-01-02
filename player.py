@@ -26,8 +26,8 @@ class Player(pygame.sprite.Sprite):
     def animated(self):
         self.animate = True
 
-    def update(self, anim_speed, screen):
-        pygame.draw.rect(screen, (0, 0, 0), self.hitbox, 1)
+    def update(self, anim_speed):
+        #pygame.draw.rect(screen, (0, 0, 0), self.hitbox, 1)
         if self.animate:
             # set sprite image for desired amount of frames
             self.current_sprite += anim_speed
