@@ -8,6 +8,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.speed = 5
+        self.score = 0
         self.sprites = []
         for i in range(1, 5):
             self.sprites.append(pygame.transform.scale(

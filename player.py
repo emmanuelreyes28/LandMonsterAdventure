@@ -4,6 +4,8 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        self.x = x
+        self.y = y
         self.animate = False
         self.jumping = False
         self.jump_power = 12
@@ -16,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.current_sprite = 0
         self.image = self.sprites[self.current_sprite]
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.center = (self.x, self.y)
         # create hitbox for collision detection
         self.hitbox = pygame.rect.Rect((0, 0), (35, 35))
         self.hitbox.midbottom = self.rect.midbottom

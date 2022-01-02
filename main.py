@@ -1,6 +1,7 @@
 import pygame
 from obstacle import Obstacle
 from player import Player
+from text import Text
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -15,21 +16,33 @@ bg = pygame.transform.scale(pygame.image.load(
     "full-background.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
 bg_x = 0
 
-player = Player(50, 195)
-player_group = pygame.sprite.GroupSingle()
-player_group.add(player)
 
+# groups
+player_group = pygame.sprite.GroupSingle()
 obstacle_group = pygame.sprite.Group()
 
+# objects
+player = Player(50, 195)
+player_group.add(player)
+score_text = Text(SCREEN, "000", 18, (0, 0, 0), 250, 0)
+
+# variables
 timer = 0
 spawn = False
-instantiate_time = 1000
+instantiate_time = 1000  # in milliseconds
+score = 0
+passed_obstacle = False
 
 # callback function for collision detection
 
 
 def collided(sprite, other):
     return sprite.hitbox.colliderect(other.hitbox)
+
+
+def game_over():
+    pygame.quit()
+    quit()
 
 
 while True:
@@ -46,9 +59,23 @@ while True:
         SCREEN.blit(bg, (rel_x, 0))
     bg_x -= 1
 
+    # increment score every time player jumps over obstacle
+    if len(obstacle_group) > 0:
+        if obstacle_group.sprites()[0].rect.left >= player_group.sprite.rect.left\
+            and obstacle_group.sprites()[0].rect.right <= player_group.sprite.rect.right\
+                and not passed_obstacle:
+            passed_obstacle = True
+        if passed_obstacle and player_group.sprite.rect.left > obstacle_group.sprites()[0].rect.right:
+            score += 1
+            score_text.text = str(score)
+            passed_obstacle = False
+
+    # update score text
+    score_text.draw()
+
     # check for collisions
     if pygame.sprite.spritecollide(player_group.sprite, obstacle_group, False, collided):
-        print("Colllided")
+        game_over()
 
     # spawn obstacles every 1 second
     if pygame.time.get_ticks() - timer >= instantiate_time:
